@@ -1,12 +1,14 @@
 import { DashboardIcon, GearIcon } from "@radix-ui/react-icons"
 import clsx from "clsx"
 import { SidebarExplorer, TooltipPopover } from "components"
+import { User } from "next-auth"
 
 interface SidebarProps {
   isOpen: boolean
+  user?: User
 }
 
-export const Sidebar = ({ isOpen }: SidebarProps) => {
+export const Sidebar = ({ isOpen, user }: SidebarProps) => {
   return (
     <aside
       className={clsx("flex h-full w-full transition-all", {
@@ -34,7 +36,7 @@ export const Sidebar = ({ isOpen }: SidebarProps) => {
           </TooltipPopover>
         </div>
       </div>
-      <SidebarExplorer isOpen={isOpen} />
+      <SidebarExplorer user={user} isOpen={isOpen} />
     </aside>
   )
 }
