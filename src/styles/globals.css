@@ -5,3 +5,10 @@
 body {
   @apply bg-background-900 text-text-500 antialiased;
 }
+
+@layer components {
+  .input:empty::before {
+    content: attr(data-placeholder);
+    @apply pointer-events-none float-left h-0 text-text-500/50;
+  }
+}

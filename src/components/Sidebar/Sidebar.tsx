@@ -9,9 +9,10 @@ interface SidebarProps {
 export const Sidebar = ({ isOpen }: SidebarProps) => {
   return (
     <aside
-      className={clsx("flex h-full w-full max-w-[21.5rem] transition-all", {
-        "bg-transparent": !isOpen,
-        "bg-background-800 shadow-[1px_0px_0px_0px] shadow-white/10": isOpen
+      className={clsx("flex h-full w-full transition-all", {
+        "max-w-[2.75rem] bg-transparent": !isOpen,
+        "max-w-[21.5rem] bg-background-800 shadow-[1px_0px_0px_0px] shadow-white/10":
+          isOpen
       })}>
       <div className="z-10 flex h-full w-full max-w-[2.75rem] flex-col items-center justify-center py-3 shadow-[1px_0px_0px_0px] shadow-white/10">
         <div className="flex flex-col items-center justify-center">

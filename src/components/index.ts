@@ -1,3 +1,4 @@
+export * from "./Editor"
 export * from "./Sidebar"
 export * from "./SidebarExplorer"
 export * from "./TooltipPopover"
