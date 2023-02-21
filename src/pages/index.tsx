@@ -19,7 +19,7 @@ export default function Home() {
   return (
     <>
       <Head>
-        <title>{`Home | ${editorTitle ?? "Untitled"}`}</title>
+        <title>{!!editorTitle ? editorTitle : "Untitled"}</title>
         <meta name="description" content="Home" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
