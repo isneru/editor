@@ -11,7 +11,7 @@ interface TopbarProps {
 
 export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
   return (
-    <section className="flex h-10 w-full items-center bg-background-700 px-3">
+    <nav className="flex h-10 w-full items-center bg-background-700 px-3">
       <TooltipPopover
         side="right"
         label={isSidebarOpen ? "Collapse" : "Expand"}>
@@ -26,6 +26,6 @@ export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
           )}
         </button>
       </TooltipPopover>
-    </section>
+    </nav>
   )
 }
