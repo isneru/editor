@@ -1,5 +1,4 @@
-import { Editor, Sidebar, Topbar } from "components"
-import { Button } from "components/Button"
+import { Button, Editor, Sidebar, Topbar } from "components"
 import { signIn, useSession } from "next-auth/react"
 import Head from "next/head"
 import { useState } from "react"
