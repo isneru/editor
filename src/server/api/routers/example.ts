@@ -1,4 +1,4 @@
-import {
+/* import {
   createTRPCRouter,
   protectedProcedure,
   publicProcedure
@@ -22,3 +22,5 @@ export const exampleRouter = createTRPCRouter({
     return "you can now see this secret message!"
   })
 })
+ */
+export {}
