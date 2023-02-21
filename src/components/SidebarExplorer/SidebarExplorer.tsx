@@ -9,11 +9,13 @@ interface SidebarExplorerProps {
 export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
   return (
     <div
-      className={clsx("py-3 transition-all", {
-        "w-0 bg-transparent": !isOpen,
-        "flex w-full flex-col bg-background-800 px-4": isOpen
+      className={clsx("overflow-hidden whitespace-nowrap py-3 transition-all", {
+        "w-[18.75rem]": isOpen,
+        "w-0": !isOpen
       })}>
-      {isOpen && <strong>{user?.name}</strong>}
+      <div className="px-3">
+        <span>{user?.name}</span>
+      </div>
     </div>
   )
 }

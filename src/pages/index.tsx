@@ -1,4 +1,5 @@
 import { Editor, Sidebar, Topbar } from "components"
+import { Button } from "components/Button"
 import { signIn, useSession } from "next-auth/react"
 import Head from "next/head"
 import { useState } from "react"
@@ -30,11 +31,11 @@ export default function Home() {
           <Editor handleEditorTitleChange={handleEditorTitleChange} />
         </main>
         {status === "unauthenticated" && (
-          <button
-            className="absolute right-5 bottom-5 flex items-center justify-center rounded bg-background-500 px-2 py-1 shadow-[0px_0px_0px_1px] shadow-white/10 hover:bg-background-200"
+          <Button
+            className="absolute right-5 bottom-5"
             onClick={() => signIn("google")}>
             Sign In
-          </button>
+          </Button>
         )}
       </div>
     </>
