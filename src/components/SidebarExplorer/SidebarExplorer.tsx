@@ -77,11 +77,7 @@ export const SidebarExplorer = ({
                   }
                 )}
                 key={note.id}>
-                {selectedNote?.id === note.id
-                  ? !!selectedNote.name
-                    ? selectedNote.name
-                    : "Untitled"
-                  : note.name}
+                {!!note.name ? note.name : "Untitled"}
               </button>
             ))}
           </div>
