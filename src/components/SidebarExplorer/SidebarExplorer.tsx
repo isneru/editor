@@ -14,7 +14,6 @@ interface SidebarExplorerProps {
   notes: Note[]
   refetchUserNotes: () => Promise<void>
   setNotes: Dispatch<SetStateAction<Note[]>>
-  setTabNotes: Dispatch<SetStateAction<Note[]>>
 }
 
 export const SidebarExplorer = ({
@@ -24,8 +23,7 @@ export const SidebarExplorer = ({
   selectedNote,
   notes,
   refetchUserNotes,
-  setNotes,
-  setTabNotes
+  setNotes
 }: SidebarExplorerProps) => {
   const noteCreate = api.note.create.useMutation()
 
