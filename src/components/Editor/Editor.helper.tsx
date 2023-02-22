@@ -1,9 +1,11 @@
+import { ToastContext } from "components"
 import debounce from "lodash.debounce"
 import {
   HTMLAttributes,
   KeyboardEvent,
   ReactNode,
   useCallback,
+  useContext,
   useEffect,
   useRef,
   useState
@@ -15,6 +17,8 @@ interface EditorHelperProps {
 }
 
 export const EditorHelper = ({ refetchUserNotes }: EditorHelperProps) => {
+  const { removeToast } = useContext(ToastContext)
+
   const [lineList, setLineList] = useState<ReactNode[]>([])
   const linesProps: HTMLAttributes<HTMLHeadingElement | HTMLParagraphElement> =
     {
@@ -46,13 +50,15 @@ export const EditorHelper = ({ refetchUserNotes }: EditorHelperProps) => {
   }
 
   const noteNameChange = api.note.changeName.useMutation()
+
   async function handleNoteNameChange(noteName: string, noteId: string) {
     await noteNameChange.mutateAsync({
       name: noteName,
       noteId: noteId
     })
-    await refetchUserNotes()
+    await refetchUserNotes().finally(removeToast)
   }
+
   const debouncedChangeHandler = useCallback(
     debounce(handleNoteNameChange, 1000),
     []
