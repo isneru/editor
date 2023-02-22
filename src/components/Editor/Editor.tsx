@@ -17,13 +17,15 @@ export const Editor = ({
     refetchUserNotes
   })
 
+  const noteName = selectedNote?.name === "Untitled" ? "" : selectedNote?.name
+
   return (
     <section className="mx-auto h-full w-full max-w-[80vw] pt-8 md:max-w-[40vw]">
       <input
         spellCheck={false}
         id={selectedNote?.id}
         onKeyDown={handleKeyPress}
-        value={!!selectedNote?.name ? selectedNote?.name : ""}
+        value={noteName}
         onChange={e => {
           setSelectedNote({ ...selectedNote!, name: e.currentTarget.value })
           debouncedChangeHandler(e.currentTarget.value, selectedNote!.id)
