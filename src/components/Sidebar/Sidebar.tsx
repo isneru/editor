@@ -5,16 +5,18 @@ import {
   GearIcon
 } from "@radix-ui/react-icons"
 import clsx from "clsx"
-import { SidebarExplorer, TooltipPopover } from "components"
+import { TooltipPopover } from "components"
 import { User } from "next-auth"
 import { signIn, signOut } from "next-auth/react"
+import { ReactNode } from "react"
 
 interface SidebarProps {
   isOpen: boolean
   user?: User
+  children: ReactNode
 }
 
-export const Sidebar = ({ isOpen, user }: SidebarProps) => {
+export const Sidebar = ({ isOpen, user, children }: SidebarProps) => {
   return (
     <aside
       className={clsx("flex h-full transition-all", {
@@ -53,7 +55,7 @@ export const Sidebar = ({ isOpen, user }: SidebarProps) => {
           </TooltipPopover>
         </div>
       </div>
-      <SidebarExplorer isOpen={isOpen} user={user} />
+      {children}
     </aside>
   )
 }

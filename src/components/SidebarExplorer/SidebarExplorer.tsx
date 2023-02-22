@@ -3,39 +3,38 @@ import { ArchiveIcon, Pencil2Icon } from "@radix-ui/react-icons"
 import clsx from "clsx"
 import { TooltipPopover } from "components"
 import { User } from "next-auth"
-import { useState } from "react"
+import { Dispatch, SetStateAction } from "react"
 import { api } from "utils/api"
 
 interface SidebarExplorerProps {
   isOpen: boolean
   user?: User
+  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
+  selectedNote: Note | undefined
+  notes: Note[]
+  refetchUserNotes: () => Promise<void>
+  setNotes: Dispatch<SetStateAction<Note[]>>
 }
 
-export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
-  const [notes, setNotes] = useState<Note[]>([])
-
+export const SidebarExplorer = ({
+  isOpen,
+  user,
+  setSelectedNote,
+  selectedNote,
+  notes,
+  refetchUserNotes,
+  setNotes
+}: SidebarExplorerProps) => {
   const noteCreate = api.note.create.useMutation()
-  const userNotes = api.note.getAllByUserId.useQuery(
-    {
-      userId: user?.id
-    },
-    {
-      enabled: !!user,
-      onSuccess: notes => {
-        if (!!notes) {
-          setNotes([...notes])
-        }
-      }
-    }
-  )
 
   async function handleCreateNote() {
     if (!user) return
     const createdNote = await noteCreate.mutateAsync({
       userId: user.id
     })
-    await userNotes.refetch()
-    setNotes(notes => [...notes, ...userNotes.data!])
+    await refetchUserNotes()
+    setNotes(prevNotes => [...prevNotes, ...notes])
+    setSelectedNote(createdNote)
   }
 
   return (
@@ -70,9 +69,19 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
           <div className="mt-2 flex flex-col justify-center gap-0.5">
             {notes.map(note => (
               <button
-                className="flex items-center rounded px-2 py-[3px] hover:bg-background-500"
+                onClick={() => setSelectedNote(note)}
+                className={clsx(
+                  "flex items-center rounded px-2 py-[3px] hover:bg-background-500",
+                  {
+                    "bg-background-500": note.id === selectedNote?.id
+                  }
+                )}
                 key={note.id}>
-                {note.name}
+                {selectedNote?.id === note.id
+                  ? !!selectedNote.name
+                    ? selectedNote.name
+                    : "Untitled"
+                  : note.name}
               </button>
             ))}
           </div>

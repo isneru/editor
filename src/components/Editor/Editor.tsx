@@ -1,60 +1,49 @@
-import {
-  HTMLAttributes,
-  KeyboardEvent,
-  ReactNode,
-  useEffect,
-  useRef,
-  useState
-} from "react"
+import { Note } from "@prisma/client"
+import debounce from "lodash.debounce"
+import { Dispatch, SetStateAction, useCallback } from "react"
+import { api } from "utils/api"
+import { EditorHelper } from "./Editor.helper"
 
 interface EditorProps {
-  handleEditorTitleChange: (title: string) => void
+  selectedNote: Note | undefined
+  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
+  refetchUserNotes: () => Promise<void>
 }
 
-export const Editor = ({ handleEditorTitleChange }: EditorProps) => {
-  const [lineList, setLineList] = useState<ReactNode[]>([])
+export const Editor = ({
+  selectedNote,
+  setSelectedNote,
+  refetchUserNotes
+}: EditorProps) => {
+  const { lineList, handleKeyPress } = EditorHelper()
+  const noteNameChange = api.note.changeName.useMutation()
 
-  const inputRef = useRef<HTMLParagraphElement>(null)
-  const titleRef = useRef<HTMLHeadingElement>(null)
-
-  useEffect(() => {
-    inputRef.current ? inputRef.current.focus() : titleRef.current?.focus()
-  }, [lineList])
-
-  const linesProps: HTMLAttributes<HTMLHeadingElement | HTMLParagraphElement> =
-    {
-      onKeyDown: handleKeyPress,
-      contentEditable: true,
-      spellCheck: false,
-      tabIndex: 0
-    }
-
-  function handleKeyPress(e: KeyboardEvent<HTMLHeadingElement>) {
-    if (e.key === "Enter") {
-      e.preventDefault()
-      setLineList(lines => [
-        ...lines,
-        <p
-          ref={inputRef}
-          className="input focus:outline-none"
-          data-placeholder={
-            lines.length === 0 ? "Type / to see commands..." : ""
-          }
-          key={lines.length}
-          {...linesProps}
-        />
-      ])
-    }
+  async function handleNoteNameChange(noteName: string, noteId: string) {
+    await noteNameChange.mutateAsync({
+      name: noteName,
+      noteId: noteId
+    })
+    await refetchUserNotes()
   }
+
+  const debouncedChangeHandler = useCallback(
+    debounce(handleNoteNameChange, 1000),
+    []
+  )
 
   return (
     <section className="mx-auto h-full w-full max-w-[80vw] pt-8 md:max-w-[40vw]">
-      <h1
-        ref={titleRef}
-        className="input mb-3 text-3xl font-bold focus:outline-none"
-        data-placeholder="Untitled"
-        onInput={e => handleEditorTitleChange(e.currentTarget.innerText)}
-        {...linesProps}
+      <input
+        spellCheck={false}
+        id={selectedNote?.id}
+        onKeyDown={handleKeyPress}
+        value={!!selectedNote?.name ? selectedNote?.name : ""}
+        onChange={e => {
+          setSelectedNote({ ...selectedNote!, name: e.currentTarget.value })
+          debouncedChangeHandler(e.currentTarget.value, selectedNote!.id)
+        }}
+        className="input mb-3 bg-transparent text-3xl font-bold focus:outline-none"
+        placeholder="Untitled"
       />
       {lineList.map(line => line)}
     </section>
