@@ -14,6 +14,7 @@ interface SidebarExplorerProps {
   notes: Note[]
   refetchUserNotes: () => Promise<void>
   setNotes: Dispatch<SetStateAction<Note[]>>
+  setTabNotes: Dispatch<SetStateAction<Note[]>>
 }
 
 export const SidebarExplorer = ({
@@ -23,7 +24,8 @@ export const SidebarExplorer = ({
   selectedNote,
   notes,
   refetchUserNotes,
-  setNotes
+  setNotes,
+  setTabNotes
 }: SidebarExplorerProps) => {
   const noteCreate = api.note.create.useMutation()
 
@@ -35,6 +37,10 @@ export const SidebarExplorer = ({
     await refetchUserNotes()
     setNotes(prevNotes => [...prevNotes, ...notes])
     setSelectedNote(createdNote)
+  }
+
+  function handleNoteSelect(note: Note) {
+    setSelectedNote(note)
   }
 
   return (
@@ -69,7 +75,7 @@ export const SidebarExplorer = ({
           <div className="mt-2 flex flex-col justify-center gap-0.5">
             {notes.map(note => (
               <button
-                onClick={() => setSelectedNote(note)}
+                onClick={() => handleNoteSelect(note)}
                 className={clsx(
                   "flex items-center rounded px-2 py-[3px] hover:bg-background-500",
                   {

@@ -20,13 +20,29 @@ body {
     stroke-linecap: round;
     animation: spiniconoff 1.5s ease-in-out infinite;
   }
+
+  .tabNote {
+    @apply relative bg-background-900;
+  }
+  .tabNote:after,
+  .tabNote:before {
+    content: "";
+    @apply absolute bottom-0 h-4 w-4 cursor-auto bg-transparent;
+  }
+
+  .tabNote:before {
+    @apply right-full rounded-br-md shadow-[6px_0px_0px_0px] shadow-background-900;
+  }
+  .tabNote:after {
+    @apply left-full rounded-bl-md shadow-[-6px_0px_0px_0px] shadow-background-900;
+  }
 }
+
 @keyframes spinicon {
   100% {
     transform: rotate(360deg);
   }
 }
-
 @keyframes spiniconoff {
   0% {
     stroke-dasharray: 0 150;

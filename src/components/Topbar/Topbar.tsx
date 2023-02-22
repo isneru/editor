@@ -1,15 +1,27 @@
+import { Note } from "@prisma/client"
 import {
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon
 } from "@radix-ui/react-icons"
+import clsx from "clsx"
 import { TooltipPopover } from "components/TooltipPopover"
+import { Dispatch, SetStateAction } from "react"
 
 interface TopbarProps {
   toggleSidebar: () => void
   isSidebarOpen: boolean
+  tabNotes: Note[]
+  selectedNote: Note | undefined
+  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
 }
 
-export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
+export const Topbar = ({
+  toggleSidebar,
+  isSidebarOpen,
+  tabNotes,
+  selectedNote,
+  setSelectedNote
+}: TopbarProps) => {
   return (
     <nav className="flex h-10 w-full items-center bg-background-700 px-3">
       <TooltipPopover
@@ -26,6 +38,27 @@ export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
           )}
         </button>
       </TooltipPopover>
+      <div
+        className={clsx("flex gap-1 self-end transition-all", {
+          "ml-4": !isSidebarOpen,
+          "ml-80": isSidebarOpen
+        })}>
+        {tabNotes.map((note, idx) => (
+          <button
+            key={idx}
+            onClick={() => setSelectedNote(note)}
+            type="button"
+            className={clsx("flex items-center gap-2 px-2 leading-7", {
+              "tabNote rounded-t-md pb-1": selectedNote?.id === note.id,
+              "mb-1 rounded-md hover:bg-white/10": selectedNote?.id !== note.id
+            })}>
+            {!!note.name ? note.name : "Untitled"}
+            {/* <button className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
+              <Cross2Icon width={10} height={10} />
+            </button> */}
+          </button>
+        ))}
+      </div>
     </nav>
   )
 }
