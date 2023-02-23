@@ -17,6 +17,7 @@ interface NotesContextData {
   refetchUserNotes(): Promise<void>
   openedNotesAsTab: Note[] | undefined
   setOpenedNotesAsTab: Dispatch<SetStateAction<Note[] | undefined>>
+  onNoteClick: (note: Note) => void
 }
 
 export const NotesContext = createContext({} as NotesContextData)
@@ -46,6 +47,19 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
     }
   )
 
+  function onNoteClick(note: Note) {
+    setSelectedNote(note)
+    setOpenedNotesAsTab(notes => {
+      if (!!notes) {
+        if (!notes.includes(note)) {
+          return [...notes, note]
+        }
+        return [...notes]
+      }
+      return [note]
+    })
+  }
+
   async function refetchUserNotes() {
     await userNotes.refetch()
   }
@@ -59,7 +73,8 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
         setSelectedNote,
         refetchUserNotes,
         openedNotesAsTab,
-        setOpenedNotesAsTab
+        setOpenedNotesAsTab,
+        onNoteClick
       }}>
       {children}
     </NotesContext.Provider>

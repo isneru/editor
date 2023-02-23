@@ -1,5 +1,6 @@
 import { Note } from "@prisma/client"
 import {
+  Cross2Icon,
   DoubleArrowLeftIcon,
   DoubleArrowRightIcon
 } from "@radix-ui/react-icons"
@@ -19,7 +20,12 @@ export const Topbar = ({
   isSidebarOpen,
   tabNotes
 }: TopbarProps) => {
-  const { selectedNote, setSelectedNote } = useContext(NotesContext)
+  const {
+    selectedNote,
+    setSelectedNote,
+    openedNotesAsTab,
+    setOpenedNotesAsTab
+  } = useContext(NotesContext)
 
   return (
     <nav className="flex h-10 w-full items-center bg-background-700 px-3">
@@ -42,7 +48,7 @@ export const Topbar = ({
           "ml-4": !isSidebarOpen,
           "ml-80": isSidebarOpen
         })}>
-        {tabNotes.map((note, idx) => (
+        {openedNotesAsTab?.map((note, idx) => (
           <button
             key={idx}
             onClick={() => setSelectedNote(note)}
@@ -52,9 +58,17 @@ export const Topbar = ({
               "mb-1 rounded-md hover:bg-white/10": selectedNote?.id !== note.id
             })}>
             {!!note.name ? note.name : "Untitled"}
-            {/* <button className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
+            <button
+              type="button"
+              onClick={() => {
+                const newTabNotes = [
+                  ...openedNotesAsTab.filter(n => n.id !== note.id)
+                ]
+                setOpenedNotesAsTab(newTabNotes)
+              }}
+              className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
               <Cross2Icon width={10} height={10} />
-            </button> */}
+            </button>
           </button>
         ))}
       </div>
