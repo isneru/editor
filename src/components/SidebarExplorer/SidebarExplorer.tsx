@@ -3,28 +3,19 @@ import { ArchiveIcon, Pencil2Icon } from "@radix-ui/react-icons"
 import clsx from "clsx"
 import { TooltipPopover } from "components"
 import { User } from "next-auth"
-import { Dispatch, SetStateAction } from "react"
+import { useContext } from "react"
 import { api } from "utils/api"
+import { NotesContext } from "utils/providers"
 
 interface SidebarExplorerProps {
   isOpen: boolean
   user?: User
-  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
-  selectedNote: Note | undefined
-  notes: Note[]
-  refetchUserNotes: () => Promise<void>
-  setNotes: Dispatch<SetStateAction<Note[]>>
 }
 
-export const SidebarExplorer = ({
-  isOpen,
-  user,
-  setSelectedNote,
-  selectedNote,
-  notes,
-  refetchUserNotes,
-  setNotes
-}: SidebarExplorerProps) => {
+export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
+  const { notes, refetchUserNotes, selectedNote, setNotes, setSelectedNote } =
+    useContext(NotesContext)
+
   const noteCreate = api.note.create.useMutation()
 
   async function handleCreateNote() {

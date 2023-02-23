@@ -1,19 +1,13 @@
-import { Note } from "@prisma/client"
-import { ToastContext } from "components"
-import { Dispatch, SetStateAction, useContext } from "react"
+import { useContext } from "react"
+import { NotesContext, ToastContext } from "utils/providers"
 import { EditorHelper } from "./Editor.helper"
 
-interface EditorProps {
-  selectedNote: Note | undefined
-  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
-  refetchUserNotes: () => Promise<void>
-}
+interface EditorProps {}
 
-export const Editor = ({
-  selectedNote,
-  setSelectedNote,
-  refetchUserNotes
-}: EditorProps) => {
+export const Editor = ({}: EditorProps) => {
+  const { refetchUserNotes, selectedNote, setSelectedNote } =
+    useContext(NotesContext)
+
   const { lineList, handleKeyPress, debouncedChangeHandler } = EditorHelper({
     refetchUserNotes
   })

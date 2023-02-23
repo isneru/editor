@@ -4,6 +4,7 @@ import { type AppType } from "next/app"
 import { api } from "utils/api"
 
 import "styles/globals.css"
+import { NotesProvider, ToastProvider } from "utils/providers"
 
 const MyApp: AppType<{ session: Session | null }> = ({
   Component,
@@ -11,7 +12,11 @@ const MyApp: AppType<{ session: Session | null }> = ({
 }) => {
   return (
     <SessionProvider session={session}>
-      <Component {...pageProps} />
+      <NotesProvider>
+        <ToastProvider>
+          <Component {...pageProps} />
+        </ToastProvider>
+      </NotesProvider>
     </SessionProvider>
   )
 }

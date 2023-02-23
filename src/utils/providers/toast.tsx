@@ -13,17 +13,19 @@ interface ToastProviderProps {
 }
 
 export const ToastProvider = ({ children }: ToastProviderProps) => {
+  const [toast, setToast] = useState({ message: "" })
+  const [isToastVisible, setIsToastVisible] = useState(false)
+
   function addToast(message: string) {
     if (isToastVisible) return
     setToast({ message })
     setIsToastVisible(true)
   }
+
   function removeToast() {
     setIsToastVisible(false)
   }
 
-  const [toast, setToast] = useState({ message: "" })
-  const [isToastVisible, setIsToastVisible] = useState(false)
   return (
     <ToastContext.Provider value={{ addToast, removeToast }}>
       {children}

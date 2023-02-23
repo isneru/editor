@@ -5,23 +5,22 @@ import {
 } from "@radix-ui/react-icons"
 import clsx from "clsx"
 import { TooltipPopover } from "components/TooltipPopover"
-import { Dispatch, SetStateAction } from "react"
+import { useContext } from "react"
+import { NotesContext } from "utils/providers"
 
 interface TopbarProps {
   toggleSidebar: () => void
   isSidebarOpen: boolean
   tabNotes: Note[]
-  selectedNote: Note | undefined
-  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
 }
 
 export const Topbar = ({
   toggleSidebar,
   isSidebarOpen,
-  tabNotes,
-  selectedNote,
-  setSelectedNote
+  tabNotes
 }: TopbarProps) => {
+  const { selectedNote, setSelectedNote } = useContext(NotesContext)
+
   return (
     <nav className="flex h-10 w-full items-center bg-background-700 px-3">
       <TooltipPopover

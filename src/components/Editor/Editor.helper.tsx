@@ -1,4 +1,3 @@
-import { ToastContext } from "components"
 import debounce from "lodash.debounce"
 import {
   HTMLAttributes,
@@ -11,6 +10,7 @@ import {
   useState
 } from "react"
 import { api } from "utils/api"
+import { ToastContext } from "utils/providers"
 
 interface EditorHelperProps {
   refetchUserNotes: () => Promise<void>
