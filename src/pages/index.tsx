@@ -1,4 +1,4 @@
-import { Editor, Sidebar, SidebarExplorer, Topbar } from "components"
+import { Editor, Sidebar, Topbar } from "components"
 import { useSession } from "next-auth/react"
 import Head from "next/head"
 import { useContext, useState } from "react"
@@ -28,9 +28,7 @@ export default function Home() {
           isSidebarOpen={isSidebarOpen}
         />
         <main className="flex h-full w-full">
-          <Sidebar user={session?.user} isOpen={isSidebarOpen}>
-            <SidebarExplorer isOpen={isSidebarOpen} user={session?.user} />
-          </Sidebar>
+          <Sidebar user={session?.user} isOpen={isSidebarOpen} />
           <Editor />
         </main>
       </div>
