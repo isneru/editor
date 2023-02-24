@@ -12,8 +12,14 @@ interface SidebarExplorerProps {
 }
 
 export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
-  const { userNotes, selectedNote, setSelectedNote, refetchNotes } =
-    useContext(NotesContext)
+  const {
+    userNotes,
+    selectedNote,
+    setSelectedNote,
+    refetchNotes,
+    useOpenedTabs
+  } = useContext(NotesContext)
+  const { addNoteToLS } = useOpenedTabs()
   const noteCreate = api.notes.create.useMutation()
 
   async function handleCreateNote() {
@@ -57,6 +63,7 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
             {userNotes.map(note => (
               <button
                 onClick={() => {
+                  addNoteToLS(note)
                   setSelectedNote(note)
                 }}
                 className={clsx(
