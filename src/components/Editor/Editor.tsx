@@ -13,9 +13,9 @@ export const Editor = () => {
         <>
           <input
             spellCheck={false}
-            id={selectedNote?.id}
+            id={selectedNote.id}
             onKeyDown={handleKeyPress}
-            value={selectedNote?.name}
+            value={selectedNote.name}
             onChange={e => {
               addToast("Saving")
               debouncedChangeHandler(e.currentTarget.value, selectedNote!.id)
