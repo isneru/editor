@@ -62,10 +62,7 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
           <div className="mt-2 flex flex-col justify-center gap-0.5">
             {userNotes.map(note => (
               <button
-                onClick={() => {
-                  addNoteToLS(note)
-                  setSelectedNote(note)
-                }}
+                onClick={() => addNoteToLS(note)}
                 className={clsx(
                   "flex items-center rounded px-2 py-[3px] hover:bg-background-500",
                   {

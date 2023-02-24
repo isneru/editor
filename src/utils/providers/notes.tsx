@@ -44,28 +44,21 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
   }
 
   function useOpenedTabs() {
-    const [openedNotes, setOpenedNotes] = useState<Note[] | undefined>()
+    const [openedNotes, setOpenedNotes] = useState<Note[]>([])
 
     useEffect(() => {
       if (typeof window !== "undefined") {
         const openedTabs = localStorage.getItem("openedTabs")
-        if (openedTabs) {
-          setOpenedNotes(JSON.parse(openedTabs))
-        }
+        setOpenedNotes(JSON.parse(openedTabs ?? "[]"))
       }
     }, [])
 
     function addNoteToLS(note: Note) {
-      setOpenedNotes(prev => {
-        if (prev && prev.some(n => n.id === note.id)) {
-          return prev
-        }
-        localStorage.setItem(
-          "openedTabs",
-          JSON.stringify([...(prev ?? []), note])
-        )
-        return [...(prev ?? []), note]
-      })
+      const isDuplicate = openedNotes.some(n => n.id === note.id)
+      if (isDuplicate) return
+      const newOpenedNotes = [...openedNotes, note]
+      setOpenedNotes(newOpenedNotes)
+      localStorage.setItem("openedTabs", JSON.stringify(newOpenedNotes))
     }
 
     function removeItemFromLS(note: Note) {
