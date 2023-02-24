@@ -46,12 +46,12 @@ export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
               "mb-1 rounded-md hover:bg-white/10": selectedNote?.id !== note.id
             })}>
             {!!note.name ? note.name : "Untitled"}
-            <button
-              type="button"
+            <span
+              role="button"
               onClick={() => {}}
               className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
               <Cross2Icon width={10} height={10} />
-            </button>
+            </span>
           </button>
         ))}
       </div>
