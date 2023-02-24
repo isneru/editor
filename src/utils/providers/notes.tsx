@@ -15,11 +15,9 @@ interface NotesContextData {
   setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
   userNotes: Note[] | undefined
   refetchNotes(): Promise<void>
-  useOpenedTabs(): {
-    readonly openedNotes: Note[] | undefined
-    readonly addNoteToLS: (note: Note) => void
-    readonly removeItemFromLS: (note: Note) => void
-  }
+  openedNotes: Note[]
+  addNoteToLS: (note: Note) => void
+  removeItemFromLS: (note: Note) => void
 }
 export const NotesContext = createContext({} as NotesContextData)
 
@@ -29,7 +27,7 @@ interface NotesProviderProps {
 
 export const NotesProvider = ({ children }: NotesProviderProps) => {
   const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined)
-
+  const [openedNotes, setOpenedNotes] = useState<Note[]>([])
   const { data: session } = useSession()
   const { data: userNotes, refetch } = api.notes.getAllByUserId.useQuery(
     {
@@ -43,31 +41,25 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
     await refetch()
   }
 
-  function useOpenedTabs() {
-    const [openedNotes, setOpenedNotes] = useState<Note[]>([])
-
-    useEffect(() => {
-      if (typeof window !== "undefined") {
-        const openedTabs = localStorage.getItem("openedTabs")
-        setOpenedNotes(JSON.parse(openedTabs ?? "[]"))
-      }
-    }, [])
-
-    function addNoteToLS(note: Note) {
-      const isDuplicate = openedNotes.some(n => n.id === note.id)
-      if (isDuplicate) return
-      const newOpenedNotes = [...openedNotes, note]
-      setOpenedNotes(newOpenedNotes)
-      localStorage.setItem("openedTabs", JSON.stringify(newOpenedNotes))
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const openedTabs = localStorage.getItem("openedTabs")
+      setOpenedNotes(JSON.parse(openedTabs ?? "[]"))
     }
+  }, [])
 
-    function removeItemFromLS(note: Note) {
-      const newOpenedNotes = openedNotes?.filter(n => n.id !== note.id)
-      setOpenedNotes(newOpenedNotes)
-      localStorage.setItem("openedTabs", JSON.stringify(newOpenedNotes))
-    }
+  function addNoteToLS(note: Note) {
+    const isDuplicate = openedNotes.some(n => n.id === note.id)
+    if (isDuplicate) return
+    const newOpenedNotes = [...openedNotes, note]
+    setOpenedNotes(newOpenedNotes)
+    localStorage.setItem("openedTabs", JSON.stringify(newOpenedNotes))
+  }
 
-    return { openedNotes, addNoteToLS, removeItemFromLS } as const
+  function removeItemFromLS(note: Note) {
+    const newOpenedNotes = openedNotes.filter(n => n.id !== note.id)
+    localStorage.setItem("openedTabs", JSON.stringify(newOpenedNotes))
+    setOpenedNotes(newOpenedNotes)
   }
 
   return (
@@ -77,7 +69,9 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
         setSelectedNote,
         userNotes,
         refetchNotes,
-        useOpenedTabs
+        addNoteToLS,
+        removeItemFromLS,
+        openedNotes
       }}>
       {children}
     </NotesContext.Provider>

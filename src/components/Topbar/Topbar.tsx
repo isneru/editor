@@ -14,9 +14,9 @@ interface TopbarProps {
 }
 
 export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
-  const { selectedNote, setSelectedNote, userNotes, useOpenedTabs } =
+  const { selectedNote, setSelectedNote, openedNotes, removeItemFromLS } =
     useContext(NotesContext)
-  const { openedNotes, removeItemFromLS } = useOpenedTabs()
+
   return (
     <nav className="flex h-10 w-full items-center bg-background-700 px-3">
       <TooltipPopover

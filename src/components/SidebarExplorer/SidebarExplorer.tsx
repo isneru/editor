@@ -17,9 +17,8 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
     selectedNote,
     setSelectedNote,
     refetchNotes,
-    useOpenedTabs
+    addNoteToLS
   } = useContext(NotesContext)
-  const { addNoteToLS } = useOpenedTabs()
   const noteCreate = api.notes.create.useMutation()
 
   async function handleCreateNote() {
@@ -62,7 +61,10 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
           <div className="mt-2 flex flex-col justify-center gap-0.5">
             {userNotes.map(note => (
               <button
-                onClick={() => addNoteToLS(note)}
+                onClick={() => {
+                  addNoteToLS(note)
+                  setSelectedNote(note)
+                }}
                 className={clsx(
                   "flex items-center rounded px-2 py-[3px] hover:bg-background-500",
                   {
