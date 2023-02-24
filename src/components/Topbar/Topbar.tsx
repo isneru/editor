@@ -14,8 +14,13 @@ interface TopbarProps {
 }
 
 export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
-  const { selectedNote, setSelectedNote, openedNotes, removeItemFromLS } =
-    useContext(NotesContext)
+  const {
+    selectedNote,
+    setSelectedNote,
+    openedNotes,
+    removeNoteFromLS,
+    userNotes
+  } = useContext(NotesContext)
 
   return (
     <nav className="flex h-10 w-full items-center bg-background-700 px-3">
@@ -38,26 +43,27 @@ export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
           "ml-4": !isSidebarOpen,
           "ml-80": isSidebarOpen
         })}>
-        {openedNotes?.map((note, idx) => (
-          <button
-            key={idx}
-            onClick={() => {
-              setSelectedNote(note)
-            }}
-            type="button"
-            className={clsx("flex items-center gap-2 px-2 leading-7", {
-              "tabNote rounded-t-md pb-1": selectedNote?.id === note.id,
-              "mb-1 rounded-md hover:bg-white/10": selectedNote?.id !== note.id
-            })}>
-            {!!note.name ? note.name : "Untitled"}
-            <span
-              role="button"
-              onClick={() => removeItemFromLS(note)}
-              className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
-              <Cross2Icon width={10} height={10} />
-            </span>
-          </button>
-        ))}
+        {userNotes &&
+          openedNotes?.map((note, idx) => (
+            <button
+              key={idx}
+              onClick={() => setSelectedNote(note)}
+              type="button"
+              className={clsx("flex items-center gap-2 px-2 leading-7", {
+                "tabNote rounded-t-md pb-1": selectedNote?.id === note.id,
+                "mb-1 rounded-md hover:bg-white/10":
+                  selectedNote?.id !== note.id
+              })}>
+              {userNotes.find(userNote => userNote.id === note.id)?.name ||
+                "Untitled"}
+              <span
+                role="button"
+                onClick={() => removeNoteFromLS(note)}
+                className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
+                <Cross2Icon width={10} height={10} />
+              </span>
+            </button>
+          ))}
       </div>
     </nav>
   )

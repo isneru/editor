@@ -15,6 +15,7 @@ import { NotesContext, ToastContext } from "utils/providers"
 export const EditorHelper = () => {
   const { removeToast } = useContext(ToastContext)
   const { refetchNotes } = useContext(NotesContext)
+  const { selectedNote, setSelectedNote } = useContext(NotesContext)
   const [lineList, setLineList] = useState<ReactNode[]>([])
   const linesProps: HTMLAttributes<HTMLHeadingElement | HTMLParagraphElement> =
     {
@@ -48,7 +49,7 @@ export const EditorHelper = () => {
   const noteNameChange = api.notes.changeName.useMutation()
 
   async function handleNoteNameChange(noteName: string, noteId: string) {
-    await noteNameChange.mutateAsync({
+    const { name } = await noteNameChange.mutateAsync({
       name: noteName,
       noteId: noteId
     })

@@ -6,7 +6,6 @@ export const Editor = () => {
   const { addToast } = useContext(ToastContext)
   const { selectedNote, setSelectedNote } = useContext(NotesContext)
   const { lineList, handleKeyPress, debouncedChangeHandler } = EditorHelper()
-  const noteName = selectedNote?.name === "Untitled" ? "" : selectedNote?.name
 
   return (
     <section className="mx-auto h-full w-full max-w-[80vw] pt-8 md:max-w-[40vw]">
@@ -16,11 +15,11 @@ export const Editor = () => {
             spellCheck={false}
             id={selectedNote?.id}
             onKeyDown={handleKeyPress}
-            value={noteName}
+            value={selectedNote?.name}
             onChange={e => {
               addToast("Saving")
-              setSelectedNote({ ...selectedNote!, name: e.currentTarget.value })
               debouncedChangeHandler(e.currentTarget.value, selectedNote!.id)
+              setSelectedNote({ ...selectedNote, name: e.currentTarget.value })
             }}
             className="mb-3 bg-transparent text-3xl font-bold leading-none focus:outline-none"
             placeholder="Untitled"
