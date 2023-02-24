@@ -6,9 +6,9 @@ import { NotesContext } from "utils/providers"
 
 export default function Home() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true)
-  const { notes, selectedNote } = useContext(NotesContext)
+  const { selectedNote } = useContext(NotesContext)
 
-  const { data: session, status } = useSession()
+  const { data: session } = useSession()
 
   function toggleSidebar() {
     setIsSidebarOpen(val => !val)
@@ -22,11 +22,7 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <div className="flex h-screen w-screen flex-col">
-        <Topbar
-          tabNotes={notes}
-          toggleSidebar={toggleSidebar}
-          isSidebarOpen={isSidebarOpen}
-        />
+        <Topbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
         <main className="flex h-full w-full">
           <Sidebar user={session?.user} isOpen={isSidebarOpen} />
           <Editor />

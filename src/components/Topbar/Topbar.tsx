@@ -1,4 +1,3 @@
-import { Note } from "@prisma/client"
 import {
   Cross2Icon,
   DoubleArrowLeftIcon,
@@ -12,21 +11,10 @@ import { NotesContext } from "utils/providers"
 interface TopbarProps {
   toggleSidebar: () => void
   isSidebarOpen: boolean
-  tabNotes: Note[]
 }
 
-export const Topbar = ({
-  toggleSidebar,
-  isSidebarOpen,
-  tabNotes
-}: TopbarProps) => {
-  const {
-    selectedNote,
-    setSelectedNote,
-    openedNotesAsTab,
-    setOpenedNotesAsTab
-  } = useContext(NotesContext)
-
+export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
+  const { selectedNote, setSelectedNote, userNotes } = useContext(NotesContext)
   return (
     <nav className="flex h-10 w-full items-center bg-background-700 px-3">
       <TooltipPopover
@@ -48,7 +36,7 @@ export const Topbar = ({
           "ml-4": !isSidebarOpen,
           "ml-80": isSidebarOpen
         })}>
-        {openedNotesAsTab?.map((note, idx) => (
+        {userNotes?.map((note, idx) => (
           <button
             key={idx}
             onClick={() => setSelectedNote(note)}
@@ -60,12 +48,7 @@ export const Topbar = ({
             {!!note.name ? note.name : "Untitled"}
             <button
               type="button"
-              onClick={() => {
-                const newTabNotes = [
-                  ...openedNotesAsTab.filter(n => n.id !== note.id)
-                ]
-                setOpenedNotesAsTab(newTabNotes)
-              }}
+              onClick={() => {}}
               className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
               <Cross2Icon width={10} height={10} />
             </button>

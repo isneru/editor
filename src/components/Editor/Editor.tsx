@@ -2,18 +2,10 @@ import { useContext } from "react"
 import { NotesContext, ToastContext } from "utils/providers"
 import { EditorHelper } from "./Editor.helper"
 
-interface EditorProps {}
-
-export const Editor = ({}: EditorProps) => {
-  const { refetchUserNotes, selectedNote, setSelectedNote } =
-    useContext(NotesContext)
-
-  const { lineList, handleKeyPress, debouncedChangeHandler } = EditorHelper({
-    refetchUserNotes
-  })
-
+export const Editor = () => {
   const { addToast } = useContext(ToastContext)
-
+  const { selectedNote, setSelectedNote } = useContext(NotesContext)
+  const { lineList, handleKeyPress, debouncedChangeHandler } = EditorHelper()
   const noteName = selectedNote?.name === "Untitled" ? "" : selectedNote?.name
 
   return (

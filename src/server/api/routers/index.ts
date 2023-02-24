@@ -1,2 +1,2 @@
-export * from "./folder"
-export * from "./note"
+export * from "./folders"
+export * from "./notes"

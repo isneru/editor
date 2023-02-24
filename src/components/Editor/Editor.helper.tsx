@@ -10,15 +10,11 @@ import {
   useState
 } from "react"
 import { api } from "utils/api"
-import { ToastContext } from "utils/providers"
+import { NotesContext, ToastContext } from "utils/providers"
 
-interface EditorHelperProps {
-  refetchUserNotes: () => Promise<void>
-}
-
-export const EditorHelper = ({ refetchUserNotes }: EditorHelperProps) => {
+export const EditorHelper = () => {
   const { removeToast } = useContext(ToastContext)
-
+  const { refetchNotes } = useContext(NotesContext)
   const [lineList, setLineList] = useState<ReactNode[]>([])
   const linesProps: HTMLAttributes<HTMLHeadingElement | HTMLParagraphElement> =
     {
@@ -49,14 +45,14 @@ export const EditorHelper = ({ refetchUserNotes }: EditorHelperProps) => {
     }
   }
 
-  const noteNameChange = api.note.changeName.useMutation()
+  const noteNameChange = api.notes.changeName.useMutation()
 
   async function handleNoteNameChange(noteName: string, noteId: string) {
     await noteNameChange.mutateAsync({
       name: noteName,
       noteId: noteId
     })
-    await refetchUserNotes().finally(removeToast)
+    await refetchNotes().finally(removeToast)
   }
 
   const debouncedChangeHandler = useCallback(

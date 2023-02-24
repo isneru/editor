@@ -1,4 +1,3 @@
-import { type Note } from "@prisma/client"
 import { ArchiveIcon, Pencil2Icon } from "@radix-ui/react-icons"
 import clsx from "clsx"
 import { TooltipPopover } from "components"
@@ -13,29 +12,16 @@ interface SidebarExplorerProps {
 }
 
 export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
-  const {
-    notes,
-    refetchUserNotes,
-    selectedNote,
-    setNotes,
-    setSelectedNote,
-    onNoteClick
-  } = useContext(NotesContext)
-
-  const noteCreate = api.note.create.useMutation()
+  const { userNotes, selectedNote, setSelectedNote, refetchNotes } =
+    useContext(NotesContext)
+  const noteCreate = api.notes.create.useMutation()
 
   async function handleCreateNote() {
     if (!user) return
     const createdNote = await noteCreate.mutateAsync({
       userId: user.id
     })
-    await refetchUserNotes()
-    setNotes(prevNotes => [...prevNotes, ...notes])
-    setSelectedNote(createdNote)
-  }
-
-  function handleNoteSelect(note: Note) {
-    setSelectedNote(note)
+    await refetchNotes().finally(() => setSelectedNote(createdNote))
   }
 
   return (
@@ -66,11 +52,13 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
           </TooltipPopover>
         </nav>
         <span>{user?.name}</span>
-        {notes && (
+        {userNotes && (
           <div className="mt-2 flex flex-col justify-center gap-0.5">
-            {notes.map(note => (
+            {userNotes.map(note => (
               <button
-                onClick={() => onNoteClick(note)}
+                onClick={() => {
+                  setSelectedNote(note)
+                }}
                 className={clsx(
                   "flex items-center rounded px-2 py-[3px] hover:bg-background-500",
                   {

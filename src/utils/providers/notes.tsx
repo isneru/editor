@@ -10,16 +10,11 @@ import {
 import { api } from "utils/api"
 
 interface NotesContextData {
-  notes: Note[]
-  setNotes: Dispatch<SetStateAction<Note[]>>
   selectedNote: Note | undefined
   setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
-  refetchUserNotes(): Promise<void>
-  openedNotesAsTab: Note[] | undefined
-  setOpenedNotesAsTab: Dispatch<SetStateAction<Note[] | undefined>>
-  onNoteClick: (note: Note) => void
+  userNotes: Note[] | undefined
+  refetchNotes(): Promise<void>
 }
-
 export const NotesContext = createContext({} as NotesContextData)
 
 interface NotesProviderProps {
@@ -27,54 +22,28 @@ interface NotesProviderProps {
 }
 
 export const NotesProvider = ({ children }: NotesProviderProps) => {
-  const [notes, setNotes] = useState<Note[]>([])
-  const [selectedNote, setSelectedNote] = useState<Note | undefined>()
-  const [openedNotesAsTab, setOpenedNotesAsTab] = useState<Note[] | undefined>()
+  const [selectedNote, setSelectedNote] = useState<Note | undefined>(undefined)
 
   const { data: session } = useSession()
-
-  const userNotes = api.note.getAllByUserId.useQuery(
+  const { data: userNotes, refetch } = api.notes.getAllByUserId.useQuery(
     {
       userId: session?.user?.id
     },
     {
-      enabled: !!session?.user,
-      onSuccess: notes => {
-        if (!!notes) {
-          setNotes([...notes])
-        }
-      }
+      enabled: !!session?.user
     }
   )
-
-  function onNoteClick(note: Note) {
-    setSelectedNote(note)
-    setOpenedNotesAsTab(notes => {
-      if (!!notes) {
-        if (!notes.includes(note)) {
-          return [...notes, note]
-        }
-        return [...notes]
-      }
-      return [note]
-    })
-  }
-
-  async function refetchUserNotes() {
-    await userNotes.refetch()
+  async function refetchNotes() {
+    await refetch()
   }
 
   return (
     <NotesContext.Provider
       value={{
-        notes,
-        setNotes,
         selectedNote,
         setSelectedNote,
-        refetchUserNotes,
-        openedNotesAsTab,
-        setOpenedNotesAsTab,
-        onNoteClick
+        userNotes,
+        refetchNotes
       }}>
       {children}
     </NotesContext.Provider>
