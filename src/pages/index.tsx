@@ -19,7 +19,7 @@ export default function Home() {
       <Head>
         <title>{!!selectedNote?.name ? selectedNote?.name : "Untitled"}</title>
         <meta name="description" content="Home" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/favicon.svg" />
       </Head>
       <div className="flex h-screen w-screen flex-col">
         <Topbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
