@@ -47,7 +47,7 @@ export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
           openedNotes?.map((note, idx) => (
             <button
               key={idx}
-              onClick={e => setSelectedNote(note)}
+              onClick={() => setSelectedNote(note)}
               type="button"
               className={clsx("flex items-center gap-2 px-2 leading-7", {
                 "tabNote rounded-t-md pb-1": selectedNote?.id === note.id,

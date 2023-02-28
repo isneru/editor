@@ -63,7 +63,7 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
               <button
                 onClick={() => addNoteToLS(note)}
                 className={clsx(
-                  "flex items-center rounded px-2 py-[3px] hover:bg-background-500",
+                  "flex items-center overflow-hidden rounded px-2 py-[3px] hover:bg-background-500",
                   {
                     "bg-background-500": note.id === selectedNote?.id
                   }
