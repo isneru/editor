@@ -45,5 +45,17 @@ export const notesRouter = createTRPCRouter({
           name: input.name
         }
       })
+    }),
+  changeContent: publicProcedure
+    .input(z.object({ content: z.string(), noteId: z.string() }))
+    .mutation(async ({ input, ctx }) => {
+      return await ctx.prisma.note.update({
+        where: {
+          id: input.noteId
+        },
+        data: {
+          content: input.content
+        }
+      })
     })
 })

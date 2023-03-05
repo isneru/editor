@@ -47,23 +47,38 @@ export const EditorHelper = () => {
   }
 
   const noteNameChange = api.notes.changeName.useMutation()
+  const noteContentChange = api.notes.changeContent.useMutation()
 
   async function handleNoteNameChange(noteName: string, noteId: string) {
-    const { name } = await noteNameChange.mutateAsync({
+    await noteNameChange.mutateAsync({
       name: noteName,
       noteId: noteId
     })
     await refetchNotes().finally(removeToast)
   }
 
-  const debouncedChangeHandler = useCallback(
+  async function handleNoteContentChange(noteContent: string, noteId: string) {
+    await noteContentChange.mutateAsync({
+      content: noteContent,
+      noteId: noteId
+    })
+    await refetchNotes().finally(removeToast)
+  }
+
+  const debouncedNameChangeHandler = useCallback(
     debounce(handleNoteNameChange, 1000),
+    []
+  )
+
+  const debouncedContentChangeHandler = useCallback(
+    debounce(handleNoteContentChange, 1000),
     []
   )
 
   return {
     lineList,
     handleKeyPress,
-    debouncedChangeHandler
+    debouncedNameChangeHandler,
+    debouncedContentChangeHandler
   }
 }
