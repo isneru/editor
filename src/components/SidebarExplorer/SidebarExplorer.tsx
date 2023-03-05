@@ -1,6 +1,6 @@
 import { ArchiveIcon, Pencil2Icon } from "@radix-ui/react-icons"
 import clsx from "clsx"
-import { TooltipPopover } from "components"
+import { NoteMenuContext, TooltipPopover } from "components"
 import { User } from "next-auth"
 import { useContext } from "react"
 import { api } from "utils/api"
@@ -60,17 +60,19 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
         {userNotes && (
           <div className="mt-2 flex flex-col justify-center gap-0.5">
             {userNotes.map(note => (
-              <button
-                onClick={() => addNoteToLS(note)}
-                className={clsx(
-                  "flex items-center overflow-hidden rounded px-2 py-[3px] hover:bg-background-500",
-                  {
-                    "bg-background-500": note.id === selectedNote?.id
-                  }
-                )}
-                key={note.id}>
-                {!!note.name ? note.name : "Untitled"}
-              </button>
+              <NoteMenuContext note={note}>
+                <button
+                  onClick={() => addNoteToLS(note)}
+                  className={clsx(
+                    "flex items-center overflow-hidden rounded px-2 py-[3px] hover:bg-background-500",
+                    {
+                      "bg-background-500": note.id === selectedNote?.id
+                    }
+                  )}
+                  key={note.id}>
+                  {!!note.name ? note.name : "Untitled"}
+                </button>
+              </NoteMenuContext>
             ))}
           </div>
         )}

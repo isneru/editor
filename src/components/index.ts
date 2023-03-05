@@ -1,5 +1,6 @@
 export * from "./Button"
 export * from "./Editor"
+export * from "./NoteMenuContext"
 export * from "./Sidebar"
 export * from "./SidebarExplorer"
 export * from "./TooltipPopover"

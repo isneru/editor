@@ -18,6 +18,7 @@ interface NotesContextData {
   openedNotes: Note[]
   addNoteToLS: (note: Note) => void
   removeNoteFromLS: (note: Note) => void
+  deleteNote(note: Note): Promise<void>
 }
 export const NotesContext = createContext({} as NotesContextData)
 
@@ -38,6 +39,8 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
       enabled: !!session?.user
     }
   )
+  const handleDeleteNote = api.notes.delete.useMutation()
+
   async function refetchNotes() {
     await refetch()
   }
@@ -55,6 +58,18 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
     if (isDuplicate) return
     const newOpenedNotes = [...openedNotes, note]
     setOpenedNotes(newOpenedNotes)
+  }
+
+  async function deleteNote(note: Note) {
+    await handleDeleteNote.mutateAsync(
+      { noteId: note.id },
+      {
+        onSuccess: () => {
+          removeNoteFromLS(note)
+          refetchNotes()
+        }
+      }
+    )
   }
 
   function removeNoteFromLS(note: Note) {
@@ -78,7 +93,8 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
         refetchNotes,
         addNoteToLS,
         removeNoteFromLS,
-        openedNotes
+        openedNotes,
+        deleteNote
       }}>
       {children}
     </NotesContext.Provider>
