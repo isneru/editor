@@ -12,13 +12,8 @@ interface SidebarExplorerProps {
 }
 
 export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
-  const {
-    userNotes,
-    selectedNote,
-    setSelectedNote,
-    refetchNotes,
-    addNoteToLS
-  } = useContext(NotesContext)
+  const { userNotes, selectedNote, refetchNotes, addNoteToLS } =
+    useContext(NotesContext)
   const noteCreate = api.notes.create.useMutation()
 
   async function handleCreateNote() {
@@ -26,7 +21,7 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
     const createdNote = await noteCreate.mutateAsync({
       userId: user.id
     })
-    await refetchNotes().finally(() => setSelectedNote(createdNote))
+    await refetchNotes().finally(() => addNoteToLS(createdNote))
   }
 
   return (
