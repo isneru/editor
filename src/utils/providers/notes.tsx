@@ -11,14 +11,14 @@ import {
 import { api } from "utils/api"
 
 interface NotesContextData {
-  selectedNote: Note | undefined
-  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
   userNotes: Note[] | undefined
   refetchNotes(): Promise<void>
+  selectedNote: Note | undefined
+  setSelectedNote: Dispatch<SetStateAction<Note | undefined>>
   openedNotes: Note[]
-  addNoteToLS: (note: Note) => void
-  removeNoteFromLS: (note: Note) => void
-  deleteNote(note: Note): Promise<void>
+  addNoteToLS(note: Note): () => void
+  removeNoteFromLS(noteId: Note["id"]): void
+  deleteNote(noteId: Note["id"]): () => Promise<void>
 }
 export const NotesContext = createContext({} as NotesContextData)
 
@@ -52,48 +52,52 @@ export const NotesProvider = ({ children }: NotesProviderProps) => {
     }
   }, [])
 
-  function addNoteToLS(note: Note) {
-    setSelectedNote(note)
-    const isDuplicate = openedNotes.some(n => n.id === note.id)
-    if (isDuplicate) return
-    const newOpenedNotes = [...openedNotes, note]
-    setOpenedNotes(newOpenedNotes)
-  }
-
-  async function deleteNote(note: Note) {
-    await handleDeleteNote.mutateAsync(
-      { noteId: note.id },
-      {
-        onSuccess: () => {
-          removeNoteFromLS(note)
-          refetchNotes()
-        }
-      }
-    )
-  }
-
-  function removeNoteFromLS(note: Note) {
-    const newOpenedNotes = openedNotes.filter(n => n.id !== note.id)
-    setOpenedNotes(newOpenedNotes)
-    setSelectedNote(newOpenedNotes.length ? newOpenedNotes[0] : undefined)
-  }
-
   useEffect(() => {
     if (typeof window !== "undefined") {
       localStorage.setItem("openedTabs", JSON.stringify(openedNotes))
     }
   }, [openedNotes])
 
+  function addNoteToLS(note: Note) {
+    return () => {
+      setSelectedNote(note)
+      const isDuplicate = openedNotes.some(n => n.id === note.id)
+      if (isDuplicate) return
+      const newOpenedNotes = [...openedNotes, note]
+      setOpenedNotes(newOpenedNotes)
+    }
+  }
+
+  function deleteNote(noteId: Note["id"]) {
+    return async () => {
+      await handleDeleteNote.mutateAsync(
+        { noteId: noteId },
+        {
+          onSuccess: () => {
+            removeNoteFromLS(noteId)
+            refetchNotes()
+          }
+        }
+      )
+    }
+  }
+
+  function removeNoteFromLS(noteId: Note["id"]) {
+    const newOpenedNotes = openedNotes.filter(n => n.id !== noteId)
+    setOpenedNotes(newOpenedNotes)
+    setSelectedNote(newOpenedNotes.length ? newOpenedNotes[0] : undefined)
+  }
+
   return (
     <NotesContext.Provider
       value={{
-        selectedNote,
-        setSelectedNote,
         userNotes,
         refetchNotes,
+        selectedNote,
+        setSelectedNote,
+        openedNotes,
         addNoteToLS,
         removeNoteFromLS,
-        openedNotes,
         deleteNote
       }}>
       {children}

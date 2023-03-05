@@ -57,7 +57,7 @@ export const SidebarExplorer = ({ isOpen, user }: SidebarExplorerProps) => {
             {userNotes.map(note => (
               <NoteMenuContext note={note}>
                 <button
-                  onClick={() => addNoteToLS(note)}
+                  onClick={addNoteToLS(note)}
                   className={clsx(
                     "flex items-center overflow-hidden rounded px-2 py-[3px] hover:bg-background-500",
                     {

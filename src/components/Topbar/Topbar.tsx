@@ -47,7 +47,7 @@ export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
           openedNotes?.map((note, idx) => (
             <button
               key={idx}
-              onClick={() => addNoteToLS(note)}
+              onClick={addNoteToLS(note)}
               type="button"
               className={clsx("flex items-center gap-2 px-2 leading-7", {
                 "tabNote rounded-t-md pb-1": selectedNote?.id === note.id,
@@ -60,7 +60,7 @@ export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
                 role="button"
                 onClick={e => {
                   e.stopPropagation()
-                  removeNoteFromLS(note)
+                  removeNoteFromLS(note.id)
                 }}
                 className="flex items-center justify-center rounded p-0.5 hover:bg-white/5">
                 <Cross2Icon width={10} height={10} />

@@ -11,8 +11,9 @@ interface NoteMenuContextProps {
 }
 
 export const NoteMenuContext = ({ children, note }: NoteMenuContextProps) => {
-  const [open, setOpen] = useState<boolean>(false)
+  const [open, setOpen] = useState(false)
   const { deleteNote } = useContext(NotesContext)
+
   return (
     <ContextMenu.Root onOpenChange={setOpen}>
       <ContextMenu.Trigger asChild>{children}</ContextMenu.Trigger>
@@ -28,7 +29,7 @@ export const NoteMenuContext = ({ children, note }: NoteMenuContextProps) => {
               <ContextMenu.Item asChild>
                 <button
                   className="flex items-center justify-center gap-2 rounded px-2 py-1 transition-colors hover:bg-white/10"
-                  onClick={() => deleteNote(note)}>
+                  onClick={deleteNote(note.id)}>
                   Delete Note <TrashIcon width={16} height={16} />
                 </button>
               </ContextMenu.Item>
