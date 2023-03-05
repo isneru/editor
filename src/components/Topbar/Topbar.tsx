@@ -16,7 +16,6 @@ interface TopbarProps {
 export const Topbar = ({ toggleSidebar, isSidebarOpen }: TopbarProps) => {
   const {
     selectedNote,
-    setSelectedNote,
     addNoteToLS,
     openedNotes,
     removeNoteFromLS,
