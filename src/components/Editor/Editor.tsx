@@ -1,20 +1,18 @@
 import { useContext, useState } from "react"
+import ReactMarkdown from "react-markdown"
 import { NotesContext, ToastContext } from "utils/providers"
 import { EditorHelper } from "./Editor.helper"
-
 export const Editor = () => {
   const { addToast } = useContext(ToastContext)
   const { selectedNote, setSelectedNote } = useContext(NotesContext)
+  const [isEditing, setIsEditing] = useState(false)
   const {
-    lineList,
     handleKeyPress,
     debouncedContentChangeHandler,
     debouncedNameChangeHandler
   } = EditorHelper()
-  const [text, setText] = useState("")
-
   return (
-    <section className="mx-auto h-full w-full max-w-[80vw] pt-8 md:max-w-[40vw]">
+    <section className="mx-auto h-full w-full max-w-[80vw] overflow-y-hidden pt-8 md:max-w-[40vw]">
       {selectedNote && (
         <>
           <input
@@ -36,22 +34,31 @@ export const Editor = () => {
             className="mb-3 block bg-transparent text-3xl font-bold leading-none focus:outline-none"
             placeholder="Untitled"
           />
-          <textarea
-            spellCheck={false}
-            className="w-full resize-none bg-transparent focus:outline-none"
-            value={selectedNote.content ?? ""}
-            onChange={e => {
-              addToast("Saving")
-              debouncedContentChangeHandler(
-                e.currentTarget.value,
-                selectedNote!.id
-              )
-              setSelectedNote({
-                ...selectedNote,
-                content: e.currentTarget.value
-              })
-            }}
-          />
+          {isEditing ? (
+            <textarea
+              spellCheck={false}
+              onBlur={() => setIsEditing(false)}
+              className="h-full w-full resize-none bg-transparent focus:outline-none"
+              value={selectedNote.content ?? ""}
+              onChange={e => {
+                addToast("Saving")
+                debouncedContentChangeHandler(
+                  e.currentTarget.value,
+                  selectedNote!.id
+                )
+                setSelectedNote({
+                  ...selectedNote,
+                  content: e.currentTarget.value
+                })
+              }}
+            />
+          ) : (
+            <div contentEditable onFocus={() => setIsEditing(true)}>
+              <ReactMarkdown className="prose prose-invert h-full w-full">
+                {selectedNote.content ?? ""}
+              </ReactMarkdown>
+            </div>
+          )}
         </>
       )}
     </section>
