@@ -1,4 +1,4 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import ReactMarkdown from "react-markdown"
 import { NotesContext, ToastContext } from "utils/providers"
 import { EditorHelper } from "./Editor.helper"
@@ -11,6 +11,13 @@ export const Editor = () => {
     debouncedContentChangeHandler,
     debouncedNameChangeHandler
   } = EditorHelper()
+
+  useEffect(() => {
+    isEditing && inputRef.current?.focus()
+  }, [isEditing])
+
+  const inputRef = useRef<HTMLTextAreaElement>(null)
+
   return (
     <section className="mx-auto h-full w-full max-w-[80vw] overflow-y-hidden pt-8 md:max-w-[40vw]">
       {selectedNote && (
@@ -36,6 +43,7 @@ export const Editor = () => {
           />
           {isEditing ? (
             <textarea
+              ref={inputRef}
               spellCheck={false}
               onBlur={() => setIsEditing(false)}
               className="h-full w-full resize-none bg-transparent focus:outline-none"
@@ -53,7 +61,11 @@ export const Editor = () => {
               }}
             />
           ) : (
-            <div contentEditable onFocus={() => setIsEditing(true)}>
+            <div
+              contentEditable
+              onFocus={() => {
+                setIsEditing(true)
+              }}>
               <ReactMarkdown className="prose prose-invert h-full w-full">
                 {selectedNote.content ?? ""}
               </ReactMarkdown>
